@@ -11,8 +11,8 @@ A startup demo for [webrtc](https://webrtc.org/) beginners, Including a simple s
 - [x] [RTCClientDemo](RTCClientDemo)
   - [x] Web
   - [x] Android
-  - [ ] iOS（coming soom）
-  - [ ] Windows（coming soom）
+  - [ ] iOS（coming soon）
+  - [ ] Windows（coming soon）
 
 ### 2. Overview
 
