@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <org.webrtc.SurfaceViewRenderer
+        android:id="@+id/LocalSurfaceView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" />
+
+    <org.webrtc.SurfaceViewRenderer
+        android:id="@+id/RemoteSurfaceView"
+        android:layout_width="120dp"
+        android:layout_height="160dp"
+        android:layout_gravity="top|end"
+        android:layout_margin="16dp"/>
+
+    <TextView
+        android:id="@+id/LogcatView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:textColor="@android:color/white"
+        android:layout_gravity="top|start" />
+
+    <Button
+        android:id="@+id/StartCallButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="30dp"
+        android:background="@drawable/startcall_button_selector"
+        android:layout_gravity="bottom|center"
+        android:onClick="onClickStartCallButton" />
+
+    <Button
+        android:id="@+id/EndCallButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="30dp"
+        android:background="@drawable/endcall_btn_selector"
+        android:layout_gravity="bottom|center"
+        android:visibility="gone"
+        android:onClick="onClickEndCallButton" />
+
+</FrameLayout>

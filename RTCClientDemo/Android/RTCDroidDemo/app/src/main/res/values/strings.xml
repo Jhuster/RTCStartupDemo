@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">RTCDroidDemo</string>
+    <string name="join_room">Join</string>
+    <string name="room_tips">Input room name: </string>
+    <string name="server_tips">Input server addr: </string>
+    <string name="default_server">http://rtc-signal.jhuster.com:8080/socket.io/</string>
+</resources>

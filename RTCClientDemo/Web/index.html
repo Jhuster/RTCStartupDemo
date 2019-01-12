@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>WebRTC Demo</title>
+
+    <link rel="stylesheet" href="css/main.css" />
+
+</head>
+
+<body>
+
+    <h1>WebRTC Demo</h1>
+
+    <div id="buttons">
+        <button id="startCall" type="button">Start Call</button>
+        <button id="endCall" type="button">End Call</button>
+    </div>
+
+    <div id="videos">
+        <video id="localVideo" autoplay muted playsinline></video>
+        <video id="remoteVideo" autoplay playsinline></video>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
+    <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+    <script src="js/main.js"></script>
+
+</body>
+
+</html>
