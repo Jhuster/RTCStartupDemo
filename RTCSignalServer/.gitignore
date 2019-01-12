@@ -1,0 +1,41 @@
+# Compiled Object files, Static and Dynamic libs (Shared Objects)
+*.o
+*.a
+*.so
+*.dll
+
+# Folders
+/bin/
+/pkg/
+_obj/
+_test/
+.cache/
+run/
+
+*.cgo1.go
+*.cgo2.c
+_cgo_defun.c
+_cgo_gotypes.go
+_cgo_export.*
+
+_testmain.go
+
+*.exe
+*.test
+*.prof
+*.out
+
+# For MacOS:
+#
+.DS_Store
+
+# For vim:
+*.swp
+
+# IntelliJ project files
+.idea
+*.iml
+out
+gen
+
+.cache
