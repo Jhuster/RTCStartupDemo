@@ -65,6 +65,8 @@ public class CallActivity extends AppCompatActivity {
     private PeerConnection mPeerConnection;
     private PeerConnectionFactory mPeerConnectionFactory;
 
+    private SurfaceTextureHelper mSurfaceTextureHelper;
+
     private SurfaceViewRenderer mLocalSurfaceView;
     private SurfaceViewRenderer mRemoteSurfaceView;
 
@@ -116,9 +118,9 @@ public class CallActivity extends AppCompatActivity {
 
         mVideoCapturer = createVideoCapturer();
 
-        SurfaceTextureHelper surfaceTextureHelper = SurfaceTextureHelper.create("CaptureThread", mRootEglBase.getEglBaseContext());
+        mSurfaceTextureHelper = SurfaceTextureHelper.create("CaptureThread", mRootEglBase.getEglBaseContext());
         VideoSource videoSource = mPeerConnectionFactory.createVideoSource(false);
-        mVideoCapturer.initialize(surfaceTextureHelper, getApplicationContext(), videoSource.getCapturerObserver());
+        mVideoCapturer.initialize(mSurfaceTextureHelper, getApplicationContext(), videoSource.getCapturerObserver());
 
         mVideoTrack = mPeerConnectionFactory.createVideoTrack(VIDEO_TRACK_ID, videoSource);
         mVideoTrack.setEnabled(true);
@@ -151,6 +153,8 @@ public class CallActivity extends AppCompatActivity {
         doEndCall();
         mLocalSurfaceView.release();
         mRemoteSurfaceView.release();
+        mVideoCapturer.dispose();
+        mSurfaceTextureHelper.dispose();
         PeerConnectionFactory.stopInternalTracingCapture();
         PeerConnectionFactory.shutdownInternalTracer();
         RTCSignalClient.getInstance().leaveRoom();
