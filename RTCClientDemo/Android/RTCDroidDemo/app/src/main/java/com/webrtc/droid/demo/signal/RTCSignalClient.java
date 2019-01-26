@@ -32,7 +32,7 @@ public class RTCSignalClient {
         void onConnecting();
         void onDisconnected();
         void onRemoteUserJoined(String userId);
-        void onRemoteUserLeaved(String userId);
+        void onRemoteUserLeft(String userId);
         void onBroadcastReceived(JSONObject message);
     }
 
@@ -53,8 +53,8 @@ public class RTCSignalClient {
         return mUserId;
     }
 
-    public void joinRoom(String url, String roomName) {
-        Log.i(TAG, "joinRoom: " + url + ", " + roomName);
+    public void joinRoom(String url, String userId, String roomName) {
+        Log.i(TAG, "joinRoom: " + url + ", " + userId + ", " + roomName);
         try {
             mSocket = IO.socket(url);
             mSocket.connect();
@@ -62,9 +62,17 @@ public class RTCSignalClient {
             e.printStackTrace();
             return;
         }
+        mUserId = userId;
         mRoomName = roomName;
         listenSignalEvents();
-        mSocket.emit("join-room", roomName);
+        try {
+            JSONObject args = new JSONObject();
+            args.put("userId", userId);
+            args.put("roomName", roomName);
+            mSocket.emit("join-room", args.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     public void leaveRoom() {
@@ -72,9 +80,16 @@ public class RTCSignalClient {
         if (mSocket == null) {
             return;
         }
-        mSocket.emit("leave-room", mRoomName);
-        mSocket.close();
-        mSocket = null;
+        try {
+            JSONObject args = new JSONObject();
+            args.put("userId", mUserId);
+            args.put("roomName", mRoomName);
+            mSocket.emit("leave-room", args.toString());
+            mSocket.close();
+            mSocket = null;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     public void sendMessage(JSONObject message) {
@@ -105,8 +120,7 @@ public class RTCSignalClient {
             @Override
             public void call(Object... args) {
                 String sessionId = mSocket.id();
-                mUserId = sessionId.substring(sessionId.indexOf("#")+1);
-                Log.i(TAG, "onConnected, Local userId = " + mUserId);
+                Log.i(TAG, "onConnected");
                 if (mOnSignalEventListener != null) {
                     mOnSignalEventListener.onConnected();
                 }
@@ -140,14 +154,14 @@ public class RTCSignalClient {
                 Log.i(TAG, "onRemoteUserJoined: " + userId);
             }
         });
-        mSocket.on("user-leaved", new Emitter.Listener() {
+        mSocket.on("user-left", new Emitter.Listener() {
             @Override
             public void call(Object... args) {
                 String userId = (String) args[0];
                 if (!mUserId.equals(userId) && mOnSignalEventListener != null) {
-                    mOnSignalEventListener.onRemoteUserLeaved(userId);
+                    mOnSignalEventListener.onRemoteUserLeft(userId);
                 }
-                Log.i(TAG, "onRemoteUserLeaved: " + userId);
+                Log.i(TAG, "onRemoteUserLeft: " + userId);
             }
         });
         mSocket.on("broadcast", new Emitter.Listener() {

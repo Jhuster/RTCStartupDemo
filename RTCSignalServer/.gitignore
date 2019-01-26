@@ -39,3 +39,4 @@ out
 gen
 
 .cache
+deploy.sh

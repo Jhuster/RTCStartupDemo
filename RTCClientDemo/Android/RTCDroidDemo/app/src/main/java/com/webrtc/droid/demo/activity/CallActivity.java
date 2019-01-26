@@ -44,6 +44,7 @@ import org.webrtc.VideoSource;
 import org.webrtc.VideoTrack;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class CallActivity extends AppCompatActivity {
 
@@ -88,7 +89,7 @@ public class CallActivity extends AppCompatActivity {
 
         String serverAddr = getIntent().getStringExtra("ServerAddr");
         String roomName = getIntent().getStringExtra("RoomName");
-        RTCSignalClient.getInstance().joinRoom(serverAddr, roomName);
+        RTCSignalClient.getInstance().joinRoom(serverAddr, UUID.randomUUID().toString(), roomName);
 
         mRootEglBase = EglBase.create();
 
@@ -475,7 +476,7 @@ public class CallActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onRemoteUserLeaved(String userId) {
+        public void onRemoteUserLeft(String userId) {
             logcatOnUI("Remote User Leaved: " + userId);
         }
 

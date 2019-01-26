@@ -5,7 +5,7 @@ const MESSAGE_TYPE_ANSWER = 0x02;
 const MESSAGE_TYPE_CANDIDATE = 0x03;
 const MESSAGE_TYPE_HANGUP = 0x04;
 
-var thiz; // store local session id
+var thiz = Math.random().toString(36).substr(2); // store local userId
 var pc = null; // webrtc RTCPeerConnection
 var localStream; // local video stream object
 
@@ -17,14 +17,13 @@ var room = prompt('Enter room name:');
 var socket = io('http://rtc-signal.jhuster.com:8080/socket.io');
 
 if (room !== '') {
-    console.log('Attempted to join room', room);
-    socket.emit('join-room', room);
+    console.log('Attempted to join room:', thiz, room);
+    var args = {
+        'userId': thiz,
+        'roomName': room
+    };
+    socket.emit('join-room', JSON.stringify(args));
 }
-
-socket.on('connect', function() {
-    thiz = socket.id.split("#")[1];
-    console.log("Connect success, session id: ", thiz);
-});
 
 socket.on('user-joined', function(userId) {
     if (thiz == userId) {
@@ -33,11 +32,11 @@ socket.on('user-joined', function(userId) {
     console.log('Peer joined room: ', userId);
 });
 
-socket.on('user-leaved', function(userId) {
+socket.on('user-left', function(userId) {
     if (thiz == userId) {
         return;
-    }  
-    console.log('Peer leaved room: ', userId); 
+    }
+    console.log('Peer left room: ', userId); 
 });
 
 socket.on('broadcast', function(msg) {
@@ -215,8 +214,10 @@ function handleRemoteStreamRemoved(event) {
 function hangup() {
     console.log('Hanging up !');
     remoteVideo.srcObject = null;
-    pc.close();
-    pc = null;
+    if (pc != null) {
+        pc.close();
+        pc = null;
+    }
 }
 
 /////////////////////////////////////////////////////////

@@ -29,10 +29,12 @@ All of the signal API are besed on [socket.io](https://socket.io). You should us
 
 ```shell
 event: 'join-room'
-message: string, <RoomName>
+message: json string
+"{\"userId\": <UserId>,\"roomName\": <RoomName>}\"
 
 event: 'leave-room'
-message: string, <RoomName>
+message: json string
+"{\"userId\": <UserId>,\"roomName\": <RoomName>}\"
 ```
 
 **Client Examples**：
@@ -41,8 +43,12 @@ message: string, <RoomName>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
 <script>
     var socket = io('http://localhost:8080/socket.io');
-    socket.emit('join-room', 'test');
-    socket.emit('leave-room', 'test');
+    var args = {
+        'userId': 'blob',
+        'roomName': 'Room1'
+    };
+    socket.emit('join-room', JSON.stringify(args));
+    socket.emit('leave-room', JSON.stringify(args));
 </script>
 ```
 
@@ -50,10 +56,10 @@ message: string, <RoomName>
 
 ```shell
 event: 'user-joined'
-message: string, <UserId>
+message: string  // The userId who joined
 
-event: 'user-leaved'
-message: string, <UserId>
+event: 'user-left'
+message: string  // The userId who left
 ```
 
 **Client Examples**：
@@ -65,9 +71,9 @@ message: string, <UserId>
 	socket.on('user-joined', function(userId) {
             console.log('Peer joined room: ' + userId);
 	});
-	socket.on('user-leaved', function(userId) {
+	socket.on('user-left', function(userId) {
             console.log('Peer leaved room: ' + userId);
-        });
+    });
 </script>
 ```
 
