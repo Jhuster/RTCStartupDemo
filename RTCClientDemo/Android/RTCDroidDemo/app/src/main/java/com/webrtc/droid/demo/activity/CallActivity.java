@@ -98,16 +98,14 @@ public class CallActivity extends AppCompatActivity {
 
         mLocalSurfaceView.init(mRootEglBase.getEglBaseContext(), null);
         mLocalSurfaceView.setScalingType(RendererCommon.ScalingType.SCALE_ASPECT_FILL);
-        mLocalSurfaceView.setEnableHardwareScaler(true /* enabled */);;
         mLocalSurfaceView.setMirror(true);
         mLocalSurfaceView.setEnableHardwareScaler(false /* enabled */);
 
         mRemoteSurfaceView.init(mRootEglBase.getEglBaseContext(), null);
         mRemoteSurfaceView.setScalingType(RendererCommon.ScalingType.SCALE_ASPECT_FILL);
-        mRemoteSurfaceView.setEnableHardwareScaler(true /* enabled */);;
         mRemoteSurfaceView.setMirror(true);
-        mRemoteSurfaceView.setZOrderMediaOverlay(true);
         mRemoteSurfaceView.setEnableHardwareScaler(true /* enabled */);
+        mRemoteSurfaceView.setZOrderMediaOverlay(true);
 
         ProxyVideoSink videoSink = new ProxyVideoSink();
         videoSink.setTarget(mLocalSurfaceView);
