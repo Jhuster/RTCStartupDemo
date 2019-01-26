@@ -100,7 +100,7 @@ public class CallActivity extends AppCompatActivity {
         mLocalSurfaceView.setScalingType(RendererCommon.ScalingType.SCALE_ASPECT_FILL);
         mLocalSurfaceView.setEnableHardwareScaler(true /* enabled */);;
         mLocalSurfaceView.setMirror(true);
-        mRemoteSurfaceView.setEnableHardwareScaler(false /* enabled */);
+        mLocalSurfaceView.setEnableHardwareScaler(false /* enabled */);
 
         mRemoteSurfaceView.init(mRootEglBase.getEglBaseContext(), null);
         mRemoteSurfaceView.setScalingType(RendererCommon.ScalingType.SCALE_ASPECT_FILL);
