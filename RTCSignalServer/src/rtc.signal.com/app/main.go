@@ -5,7 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"io/ioutil"
-
+	"net"
 	"rtc.signal.com/config"
 	"rtc.signal.com/router"
 )
@@ -39,6 +39,20 @@ func main() {
 	if err != nil {
 		fmt.Println("can't find Port in config file !", err)
 		return
+	}
+
+	addrs, err := net.InterfaceAddrs()
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	for _, address := range addrs {
+		if ipnet, ok := address.(*net.IPNet); ok && !ipnet.IP.IsLoopback() {
+			if ipnet.IP.To4() != nil {
+				fmt.Printf("Listen on: %s:%d\n", ipnet.IP.String(), cfg.ListenPort)
+			}
+		}
 	}
 
 	router.AddMonitorService()
