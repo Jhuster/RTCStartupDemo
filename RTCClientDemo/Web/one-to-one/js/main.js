@@ -5,9 +5,9 @@ const MESSAGE_TYPE_ANSWER = 0x02;
 const MESSAGE_TYPE_CANDIDATE = 0x03;
 const MESSAGE_TYPE_HANGUP = 0x04;
 
-var thiz = Math.random().toString(36).substr(2); // store local userId
-var pc = null; // webrtc RTCPeerConnection
+var localUserId = Math.random().toString(36).substr(2); // store local userId
 var localStream; // local video stream object
+var pc = null; // webrtc RTCPeerConnection
 
 /////////////////////////////////////////////
 
@@ -17,9 +17,9 @@ var room = prompt('Enter room name:');
 var socket = io('http://rtc-signal.jhuster.com:8080/socket.io');
 
 if (room !== '') {
-    console.log('Attempted to join room:', thiz, room);
+    console.log('Attempted to join room:', localUserId, room);
     var args = {
-        'userId': thiz,
+        'userId': localUserId,
         'roomName': room
     };
     socket.emit('join-room', JSON.stringify(args));
@@ -30,14 +30,14 @@ socket.on('connect', function() {
 });
 
 socket.on('user-joined', function(userId) {
-    if (thiz == userId) {
+    if (localUserId == userId) {
         return;
     }  
     console.log('Peer joined room: ', userId);
 });
 
 socket.on('user-left', function(userId) {
-    if (thiz == userId) {
+    if (localUserId == userId) {
         return;
     }
     console.log('Peer left room: ', userId); 
@@ -45,7 +45,7 @@ socket.on('user-left', function(userId) {
 
 socket.on('broadcast', function(msg) {
     console.log('Broadcast Received: ', msg); 
-    if (thiz == msg.userId) {
+    if (localUserId == msg.userId) {
         return;
     }
     console.log('Broadcast Received: ', msg.userId); 
@@ -160,7 +160,7 @@ function createOfferAndSendMessage(sessionDescription) {
     console.log('CreateOfferAndSendMessage sending message', sessionDescription);
     pc.setLocalDescription(sessionDescription);
     var message = {
-        'userId': thiz,
+        'userId': localUserId,
         'msgType': MESSAGE_TYPE_OFFER,
         'sdp': sessionDescription.sdp
     };
@@ -172,7 +172,7 @@ function createAnswerAndSendMessage(sessionDescription) {
     console.log('CreateAnswerAndSendMessage sending message', sessionDescription);
     pc.setLocalDescription(sessionDescription);
     var message = {
-        'userId': thiz,
+        'userId': localUserId,
         'msgType': MESSAGE_TYPE_ANSWER,
         'sdp': sessionDescription.sdp
     };
@@ -192,7 +192,7 @@ function handleIceCandidate(event) {
     console.log('Handle ICE candidate event: ', event);
     if (event.candidate) {
         var message = {
-            'userId': thiz,
+            'userId': localUserId,
             'msgType': MESSAGE_TYPE_CANDIDATE,
             'id': event.candidate.sdpMid,
             'label': event.candidate.sdpMLineIndex,
@@ -235,7 +235,7 @@ document.getElementById('endCall').onclick = function() {
     console.log('End call');
     hangup();
     var message = {
-        'userId': thiz,
+        'userId': localUserId,
         'msgType': MESSAGE_TYPE_HANGUP,
     };
     socket.emit('broadcast', message);
