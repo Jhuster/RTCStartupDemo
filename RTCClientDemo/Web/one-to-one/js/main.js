@@ -25,6 +25,10 @@ if (room !== '') {
     socket.emit('join-room', JSON.stringify(args));
 }
 
+socket.on('connect', function() {
+    console.log("Signal server connected !");
+});
+
 socket.on('user-joined', function(userId) {
     if (thiz == userId) {
         return;
